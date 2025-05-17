@@ -1,2 +1,2 @@
 def cardapio():
-    print("\nInserir CRUD de cardápio aqui!\n")
+    print("\nteste\n")
