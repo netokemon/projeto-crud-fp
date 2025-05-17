@@ -1,4 +1,4 @@
-import json 
+import pandas as pd
 
 def criar_prato():
     print("\nCriar novo prato")
@@ -7,17 +7,21 @@ def criar_prato():
     categoria = input("Categoria do prato: ")
     valor = float(input("Valor do prato: "))
     prato = {
-        "nome": nome,
-        "descricao": descricao,
-        "categoria": categoria,
-        "valor": valor
+        "nome": [nome],
+        "descricao": [descricao],
+        "categoria": [categoria],
+        "valor": [valor]
     }
-    with open ("cardapio.json", "w") as arquivo:
-        pratos = json.dumps(prato)
+    df = pd.DataFrame(prato)
+    df.to_json("cardapio.json")
+
     print(f"\nPrato '{nome}' criado com sucesso!")
 
+
 def listar_pratos():
-    ...
+    df = pd.read_json("cardapio.json")
+    print(df)
+
 
 def atualizar_prato():
     ...
