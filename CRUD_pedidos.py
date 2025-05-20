@@ -1,2 +1,2 @@
 def pedidos():
-    print("\nGerenciar pedidos aqui\n")
+    print("\nPedidos veyr\n")
