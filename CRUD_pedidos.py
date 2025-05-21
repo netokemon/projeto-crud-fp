@@ -40,11 +40,11 @@ def criar_pedido():
 
 
     pedido = {
-        "pratos" : [lNomes],
-        "quantidades" : [lQuantidade]
+        "pratos" : lNomes,
+        "quantidades" : lQuantidade
     }
 
-    df = pd.DataFrame(pedido)
+    df = pd.DataFrame([pedido])
 
     # checando se o arquivo existe
     if os.path.exists(arquivoPedido):
