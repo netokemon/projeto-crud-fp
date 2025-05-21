@@ -70,7 +70,7 @@ def criar_pedido():
 
 def listar_pedidos():
 
-    if os.path.exists(arquivoPedido):
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
         df = pd.read_json(arquivoPedido)
         print(df)
     else:
