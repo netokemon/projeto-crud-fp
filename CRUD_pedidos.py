@@ -72,9 +72,17 @@ def listar_pedidos():
 
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
         df = pd.read_json(arquivoPedido)
-        print(df)
+        print("\n/////// Lista de Pedidos - Restauranty: ////////\n")
+        for i in range(len(df)):
+            print(f"\n //// Pedido número {i+1} ////\n")
+            pratos = df.loc[i, "pratos"]
+            quantidades = df.loc[i, "quantidades"]
+            for j in range(len(pratos)):
+                print(f"\nPrato {j+1}: {pratos[j]} - {quantidades[j]} unidade(s)")
+        
+        
     else:
-        print("Sem pedidos até o momento!")
+        print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
 
 
 def atualizar_pedido():
@@ -86,25 +94,24 @@ def deletar_pedido():
 
 
 def pedidos():
+    while True:
+        print("\n1- Criar pedido\n2- Listar pedidos\n3- Atualizar pedido\n4- Deletar pedido\n5- Voltar ao menu principal")
+        opcao = int(input("Escolha sua opção: "))
 
-    print("\n1- Criar pedido\n2- Listar pedidos\n3- Atualizar pedido\n4- Deletar pedido\n5- Voltar ao menu principal")
-    opcao = int(input("Escolha sua opção: "))
+        if opcao == 1:
+            criar_pedido()
 
-    if opcao == 1:
-        criar_pedido()
+        elif opcao == 2:
+            listar_pedidos()
 
-    elif opcao == 2:
-        listar_pedidos()
+        elif opcao == 3:
+            atualizar_pedido()
 
-    elif opcao == 3:
-        atualizar_pedido()
+        elif opcao == 4:
+            deletar_pedido()
 
-    elif opcao == 4:
-        deletar_pedido()
-
-    elif opcao == 5:
-        return
-    
-    else:
-        print("\nOpção inválida, selecione uma opção válida!\n")
-        pedidos()
+        elif opcao == 5:
+            break
+        
+        else:
+            print("\nOpção inválida, selecione uma opção válida!\n")
