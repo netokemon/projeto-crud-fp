@@ -10,15 +10,12 @@ def criar_pedido():
     print("\n--- Criar novo pedido ---")
 
     if os.path.exists(arquivoCardapio) and os.path.getsize(arquivoCardapio) > 0: 
-        print("\n--- Cardápio do Restaurante ---") 
+        print("\n--- Cardápio do Restaurante ---\n") 
         listar_pratos()
     else: 
         print("\nA ação não pode ser feita, nenhum prato está cadastrado no cardápio.")
         return
     
-
-    
-       
 
     lNomes = []
     lQuantidade = []
@@ -27,16 +24,23 @@ def criar_pedido():
     while(True):
 
         if (len(lNomes)== 0): 
-            nome = input("Insira o nome do prato: ")
+            nome = input("\nInsira o nome do prato: ")
             
         else: 
-            opcao = input("Deseja inserir outro prato? ('Sim' / 'Não'): ")
+            opcao = input("\nDeseja inserir outro prato? ('Sim' / 'Não'): ")
             
             if opcao == "Sim" or opcao == "sim" or opcao == "SIM":
                 nome = input("Insira o nome do prato: ")
             else:
                 break
 
+
+        df_cardapio = pd.read_json(arquivoCardapio)
+        pratos_existentes = set(df_cardapio['nome'].tolist())
+
+        while(nome not in pratos_existentes):
+            print("O prato não existe no cardápio.")
+            nome = input("Insira o nome do prato: ")
 
         quantidade = int(input("Insira a quantidade: "))
 
@@ -76,7 +80,7 @@ def listar_pedidos():
         df = pd.read_json(arquivoPedido)
         print("\n/////// Lista de Pedidos - Restauranty: ////////\n")
         for i in range(len(df)):
-            print(f"\n //// Pedido número {i+1} ////\n")
+            print(f"\n//// Pedido número {i+1} ////")
             pratos = df.loc[i, "pratos"]
             quantidades = df.loc[i, "quantidades"]
             for j in range(len(pratos)):
