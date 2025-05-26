@@ -29,7 +29,7 @@ def criar_pedido():
         else: 
             opcao = input("\nDeseja inserir outro prato? ('Sim' / 'Não'): ")
             
-            if opcao == "Sim" or opcao == "sim" or opcao == "SIM":
+            if opcao.lower() == "sim":
                 nome = input("Insira o nome do prato: ")
             else:
                 break
@@ -43,7 +43,8 @@ def criar_pedido():
             nome = input("Insira o nome do prato: ")
 
         quantidade = int(input("Insira a quantidade: "))
-
+        
+    
         if nome in lNomes:
             indexNome = lNomes.index(nome)
             lQuantidade[indexNome] += quantidade
@@ -52,9 +53,17 @@ def criar_pedido():
             lQuantidade.append(quantidade)
 
 
+    opcao = input("\nDeseja inserir uma observação adicional? ('Sim' / 'Não'): ")
+    if opcao.lower() == "sim":
+        observacaoAdicional = input("Insira a observação adicional: ")
+    else: 
+        observacaoAdicional = "Sem observação adicional"
+        
     pedido = {
         "pratos" : lNomes,
-        "quantidades" : lQuantidade
+        "quantidades" : lQuantidade,
+        "observação adicional": observacaoAdicional,
+        "status": "Em preparo"
     }
 
     df = pd.DataFrame([pedido])
@@ -77,15 +86,25 @@ def criar_pedido():
 def listar_pedidos():
 
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+
         df = pd.read_json(arquivoPedido)
         print("\n/////// Lista de Pedidos - Restauranty: ////////\n")
+
         for i in range(len(df)):
+
             print(f"\n//// Pedido número {i+1} ////")
             pratos = df.loc[i, "pratos"]
             quantidades = df.loc[i, "quantidades"]
+
             for j in range(len(pratos)):
                 print(f"\nPrato {j+1}: {pratos[j]} - {quantidades[j]} unidade(s)")
         
+            observacao = df.loc[i, "observação adicional"]
+            print(f"\nObservação adicional: {observacao}")
+
+            status = df.loc[i, "status"]
+            print(f"\nStatus: {status}")
+            
         
     else:
         print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
