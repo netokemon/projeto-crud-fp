@@ -2,8 +2,10 @@ import pandas as pd
 import os
 from CRUD_cardapio import listar_pratos
 
+
 arquivoPedido = "pedidos.json"
 arquivoCardapio = "cardapio.json"
+
 
 def criar_pedido():
 
@@ -58,11 +60,18 @@ def criar_pedido():
         observacaoAdicional = input("Insira a observação adicional: ")
     else: 
         observacaoAdicional = "Sem observação adicional"
+    
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+        df = pd.read_json(arquivoPedido)
+        numeroPedido = int(df['numeroPedido'].max()) + 1
+    else:
+        numeroPedido = 1
         
     pedido = {
         "pratos" : lNomes,
         "quantidades" : lQuantidade,
-        "observação adicional": observacaoAdicional,
+        "numeroPedido": numeroPedido,
+        "observaçãoAdicional": observacaoAdicional,
         "status": "Em preparo"
     }
 
@@ -92,14 +101,14 @@ def listar_pedidos():
 
         for i in range(len(df)):
 
-            print(f"\n//// Pedido número {i+1} ////")
+            print(f"\n//// Pedido número {df.loc[i, 'numeroPedido']} ////")
             pratos = df.loc[i, "pratos"]
             quantidades = df.loc[i, "quantidades"]
 
             for j in range(len(pratos)):
                 print(f"\nPrato {j+1}: {pratos[j]} - {quantidades[j]} unidade(s)")
         
-            observacao = df.loc[i, "observação adicional"]
+            observacao = df.loc[i, "observaçãoAdicional"]
             print(f"\nObservação adicional: {observacao}")
 
             status = df.loc[i, "status"]
@@ -111,8 +120,89 @@ def listar_pedidos():
 
 
 def atualizar_pedido():
-    ...
+    
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
 
+        df = pd.read_json(arquivoPedido, orient="records")
+
+        print("\nLista de pedidos:\n")
+        listar_pedidos()
+
+        pedido_atualizar = int(input("\nInsira o número do pedido que deseja atualizar: "))
+
+        if pedido_atualizar not in df["numeroPedido"].values:
+            print("Esse pedido não existe.")
+            return
+
+        else:
+            print("\nO que deseja atualizar?\n1- Pratos\n2- Observação adicional\n3- Status")
+            opcao = int(input("Escolha sua opção: "))
+
+            if opcao == 1:
+                print("\nO que deseja fazer?\n1- Adicionar prato\n2- Remover prato\n3- Alterar quantidade de um prato")
+                opcao = int(input("Escolha sua opção: "))
+
+                if opcao == 1:
+                    ...
+                elif opcao == 2:
+                    ...
+                elif opcao == 3:
+                    ...
+                else: 
+                    print("Opção inválida, selecione uma opção válida!")
+                    return
+
+
+            elif opcao == 2:
+                print("\nO que deseja fazer?\n1- Adicionar descrição\n2- Remover descrição\n3- Alterar descrição")
+                opcao = int(input("Escolha sua opção: "))
+
+                if opcao == 1:
+                    ...
+                elif opcao == 2:
+                    ...
+                elif opcao == 3:
+                    ...
+                else:
+                    print("Opção inválida, selecione uma opção válida!")
+                    return
+
+            elif opcao == 3:
+
+                print("\nOpções de status:\n1- Em preparo\n2- Pronto\n3- Entregue")
+                opcao = int(input("Escolha sua opção: "))
+
+
+                if opcao == 1:
+                    novo_status = "Em preparo"
+                
+                elif opcao == 2:
+                    novo_status = "Pronto"
+                
+                elif opcao == 3:
+                    novo_status = "Entregue"
+                
+                else:
+                    print("Opção inválida, selecione uma opção válida!")
+                    return
+                   
+                df.loc[df["numeroPedido"] == pedido_atualizar, "status"] = novo_status
+
+        
+            else: 
+                print("\nOpção inválida, selecione uma opção válida!\n")
+                return
+
+            df.to_json(arquivoPedido, indent=4, orient="records")
+            print("\nPedido atualizado com sucesso!\n")
+
+    else:
+        print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
+        return
+        
+            
+            
+        
 def deletar_pedido():
     ...
 
