@@ -8,8 +8,17 @@ arquivoCardapio = "cardapio.json"
 def criar_pedido():
 
     print("\n--- Criar novo pedido ---")
-    print("\n--- Cardápio do Restaurante ---")
-   # listar_pratos()
+
+    if os.path.exists(arquivoCardapio) and os.path.getsize(arquivoCardapio) > 0: 
+        print("\n--- Cardápio do Restaurante ---") 
+        listar_pratos()
+    else: 
+        print("\nA ação não pode ser feita, nenhum prato está cadastrado no cardápio.")
+        return
+    
+
+    
+       
 
     lNomes = []
     lQuantidade = []
@@ -45,25 +54,18 @@ def criar_pedido():
     }
 
     df = pd.DataFrame([pedido])
-
-    # checando se o arquivo existe
+ 
     if os.path.exists(arquivoPedido):
 
-        # checando se tem algo dentro do arquivo
         if os.path.getsize(arquivoPedido) > 0:
 
-            # se tiver, ele pega o(s) pedido(s) existente(s) e concatena com o novo pedido
             df_antigo = pd.read_json(arquivoPedido)
             df_final = pd.concat([df_antigo, df])
-
-        # se não tiver nada dentro do arquivo, ele coloca o novo pedido como primeiro item
         else:
             df_final = df
-
-        # converte o pedido atualizado para json    
+ 
         df_final.to_json(arquivoPedido, indent=4, orient='records')
-
-    # se o arquivo não existir, ele cria um e coloca o novo pedido dentro   
+   
     else:
         df.to_json(arquivoPedido, indent=4, orient='records')
 
