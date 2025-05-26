@@ -22,7 +22,7 @@ def adicionar_mesas():
             if df_antigo[df_atual['numero'] == df_antigo['numero']].empty:
                 df_final = pd.concat([df_antigo, df_atual])
             else:
-                print ("Uma mesa com esse número já existe. Crie outra mesa com um número válido.\n")
+                print ("\n /////////////// ERRO: Uma mesa com esse número já existe. Crie outra mesa com um número válido. ///////////////\n")
                 adicionar_mesas()
 
         else:
@@ -33,15 +33,12 @@ def adicionar_mesas():
 
     df_final.to_json(arquivo_mesas, indent=4, orient='records')
 
-    print(f"\Mesa de número '{numero}' criada com sucesso!")
+    print(f"\n---> Mesa de número '{numero}' criada com sucesso! <---")
 
-    def listar_mesas():
-        df = pd.read_json(arquivo_mesas)
-        print(df)
 
 def ler_mapa_mesas():
     if not os.path.exists(arquivo_mesas) or os.path.getsize(arquivo_mesas) == 0:
-        print("\nNenhuma mesa cadastrada ainda.")
+        print("\n/////////////// ERRO: Nenhuma mesa cadastrada ainda. ///////////////")
         return
     
     df = pd.read_json(arquivo_mesas)
@@ -67,7 +64,7 @@ def ler_mapa_mesas():
 
 def atualizar_mesas():
     if not os.path.exists(arquivo_mesas) or os.path.getsize(arquivo_mesas) == 0:
-        print("\nNenhuma mesa cadastrada ainda.")
+        print("\n/////////////// ERRO: Nenhuma mesa cadastrada ainda. ///////////////")
         return
 
     df = pd.read_json(arquivo_mesas)
@@ -83,32 +80,37 @@ def atualizar_mesas():
         return atualizar_mesas()
     
     if numero_mesa not in df['numero'].values:
-        print(f"\nMesa {numero_mesa} não encontrada.")
+        print(f"\n/////////////// ERRO: Mesa {numero_mesa} não encontrada. ///////////////")
         return
 
     print ("\nQual categoria deseja atualizar?")
     print ("1- Número")
     print ("2- Estado")
 
+     #A função try do python faz o seguinte: TENTA rodar o código aninhado, porém caso haja algum erro do python, não irá crashar o código, ao invés disso irá
+        #rodar o except ValueError que avisa que o número é inválido.
+
     try:
         opcao = int(input("Escolha sua opção: "))
     except ValueError:
-        print ("\nOpção inválida.")
+        print ("\n/////////////// ERRO: Opção inválida. ///////////////")
         return
 
     if opcao == 1:
+        #A função try do python faz o seguinte: TENTA rodar o código aninhado, porém caso haja algum erro do python, não irá crashar o código, ao invés disso irá
+        #rodar o except ValueError que avisa que o número é inválido.
         try:
             novo_numero = int(input("Digite o novo número da mesa: "))
 
             if novo_numero in df['numero'].values:
-                print("\nJá existe uma mesa com este número.")
+                print("\n/////////////// ERRO: Já existe uma mesa com este número. ///////////////")
                 return
 
             df.loc[df['numero'] == numero_mesa, 'numero '] = novo_numero
             print (f"\nNúmero da mesa {numero_mesa} atualizado para {novo_numero} com sucesso!")
 
         except ValueError:
-            print ("\nNúmero inválido.")
+            print ("\n/////////////// ERRO: Número inválido. ///////////////")
             return
 
     elif opcao == 2:
@@ -121,7 +123,7 @@ def atualizar_mesas():
             novo_estado = int(input("Escolha sua opção: "))
 
             if novo_estado not in [0, 1, 2]:
-                print ("\nOpção inválida.")
+                print ("\n/////////////// ERRO: Opção inválida. ///////////////")
                 return
 
             df.loc[df['numero'] == numero_mesa, 'estado'] = novo_estado
@@ -130,11 +132,11 @@ def atualizar_mesas():
             print(f"\nEstado da mesa {numero_mesa} atualizado para '{estados[novo_estado]}' com sucesso!")
 
         except ValueError:
-            print ("\nOpção inválida.")
+            print ("\n/////////////// ERRO: Opção inválida. ///////////////")
             return
 
     else:
-        print("\nOpção inválida.")
+        print("\n/////////////// ERRO: Opção inválida. ///////////////")
         return
     
     df.to_json(arquivo_mesas, ident=4, orient='records')
@@ -144,19 +146,20 @@ def remover_mesas():
     ...
 
 def mesas():
-    print("\nGerenciamento das mesas\n")
-    print("\n1- Adicionar nova mesa\n2- Ler mapa de mesas\n3- Atualizar status da mesa\n4- Remover mesa\nVoltar ao menu principal")
-    opcao = int(input("Escolha sua opção: "))
-    if opcao == 1:
-        adicionar_mesas()
-    elif opcao == 2:
-        ler_mapa_mesas()
-    elif opcao == 3:
-        atualizar_mesas()
-    elif opcao == 4:
-        remover_mesas
-    elif opcao == 5:
-        return
-    else:
-        print ("\nOpção inválida, selecione uma opção válida!\n")
-        mesas()
+    while True:
+        print("\nGerenciamento das mesas\n")
+        print("\n1- Adicionar nova mesa\n2- Ler mapa de mesas\n3- Atualizar status da mesa\n4- Remover mesa\n5- Voltar ao menu principal")
+        opcao = int(input("Escolha sua opção: "))
+        if opcao == 1:
+            adicionar_mesas()
+        elif opcao == 2:
+            ler_mapa_mesas()
+        elif opcao == 3:
+            atualizar_mesas()
+        elif opcao == 4:
+            remover_mesas
+        elif opcao == 5:
+            break
+        else:
+            print ("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+            continue

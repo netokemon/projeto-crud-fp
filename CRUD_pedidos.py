@@ -15,7 +15,7 @@ def criar_pedido():
         print("\n--- Cardápio do Restaurante ---\n") 
         listar_pratos()
     else: 
-        print("\nA ação não pode ser feita, nenhum prato está cadastrado no cardápio.")
+        print("\n/////////////// ERRO: A ação não pode ser feita, nenhum prato está cadastrado no cardápio. ///////////////")
         return
     
 
@@ -41,7 +41,7 @@ def criar_pedido():
         pratos_existentes = set(df_cardapio['nome'].tolist())
 
         while(nome not in pratos_existentes):
-            print("O prato não existe no cardápio.")
+            print("\n/////////////// ERRO: O prato não existe no cardápio. ///////////////")
             nome = input("Insira o nome do prato: ")
 
         quantidade = int(input("Insira a quantidade: "))
@@ -91,6 +91,7 @@ def criar_pedido():
     else:
         df.to_json(arquivoPedido, indent=4, orient='records')
 
+print("\n---> Pedido Criado com sucesso! <---\n")
 
 def listar_pedidos():
 
@@ -129,7 +130,7 @@ def atualizar_pedido():
         pedido_atualizar = int(input("\nInsira o número do pedido que deseja atualizar: "))
 
         if pedido_atualizar not in df["numeroPedido"].values:
-            print("Esse pedido não existe.")
+            print("\n/////////////// ERRO: Esse pedido não existe. ///////////////\n")
             return
 
         else:
@@ -147,7 +148,7 @@ def atualizar_pedido():
                 elif opcao == 3:
                     ...
                 else: 
-                    print("Opção inválida, selecione uma opção válida!")
+                    print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
                     return
 
 
@@ -162,7 +163,7 @@ def atualizar_pedido():
                 elif opcao == 3:
                     ...
                 else:
-                    print("Opção inválida, selecione uma opção válida!")
+                    print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
                     return
 
             elif opcao == 3:
@@ -181,14 +182,14 @@ def atualizar_pedido():
                     novo_status = "Entregue"
                 
                 else:
-                    print("Opção inválida, selecione uma opção válida!")
+                    print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
                     return
                    
                 df.loc[df["numeroPedido"] == pedido_atualizar, "status"] = novo_status
 
         
             else: 
-                print("\nOpção inválida, selecione uma opção válida!\n")
+                print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
                 return
 
             df.to_json(arquivoPedido, indent=4, orient="records")
@@ -211,13 +212,13 @@ def deletar_pedido():
         pedido_deletar = int(input("\nInsira o número do pedido que deseja deletar: "))
 
         if pedido_deletar not in df["numeroPedido"].values:
-            print("Esse pedido não existe.")
+            print("/////////////// ERRO: Esse pedido não existe. ///////////////")
             return
         else:
             df = df[df["numeroPedido"] != pedido_deletar]
 
         df.to_json(arquivoPedido, indent=4, orient="records")
-        print("\nPedido deletado com sucesso!\n")
+        print("\nPedido deletado com sucesso! :)\n")
 
 
 def pedidos():
@@ -241,4 +242,4 @@ def pedidos():
             break
         
         else:
-            print("\nOpção inválida, selecione uma opção válida!\n")
+            print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")

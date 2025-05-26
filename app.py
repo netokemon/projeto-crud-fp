@@ -13,4 +13,4 @@ while True:
     elif opcao == 3:
         pedidos()
     else:
-        print("\nOpção inválida, selecione uma opção válida!\n")
+        print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
