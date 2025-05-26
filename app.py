@@ -14,3 +14,4 @@ while True:
         pedidos()
     else:
         print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+        continue

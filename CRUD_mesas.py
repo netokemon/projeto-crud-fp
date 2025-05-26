@@ -19,11 +19,12 @@ def adicionar_mesas():
 
         if os.path.getsize(arquivo_mesas) > 0:
 
-            if df_antigo[df_atual['numero'] == df_antigo['numero']].empty:
+            if numero not in df_antigo['numero'].values:
                 df_final = pd.concat([df_antigo, df_atual])
             else:
                 print ("\n /////////////// ERRO: Uma mesa com esse número já existe. Crie outra mesa com um número válido. ///////////////\n")
-                adicionar_mesas()
+                df_final = df_atual
+                return
 
         else:
             df_final = df_atual
@@ -143,11 +144,25 @@ def atualizar_mesas():
     print("\nMesa atualizada com sucesso! :)")
 
 def remover_mesas():
-    ...
+    if os.path.exists(arquivo_mesas) and os.path.getsize(arquivo_mesas) > 0:
+
+        df = pd.read_json(arquivo_mesas, orient="records")
+        ler_mapa_mesas()
+
+        mesa_deletar = int(input("\nInsira o número da mesa que deseja deletar: "))
+
+        if mesa_deletar not in df["numero"].values:
+            print("/////////////// ERRO: Essa mesa não existe. ///////////////")
+            return
+        else:
+            df = df[df["numero"] != mesa_deletar]
+
+        df.to_json(arquivo_mesas, indent=4, orient="records")
+        print("\nMesa deletada com sucesso! :)\n")
 
 def mesas():
     while True:
-        print("\nGerenciamento das mesas\n")
+        print("\nGerenciamento das mesas")
         print("\n1- Adicionar nova mesa\n2- Ler mapa de mesas\n3- Atualizar status da mesa\n4- Remover mesa\n5- Voltar ao menu principal")
         opcao = int(input("Escolha sua opção: "))
         if opcao == 1:

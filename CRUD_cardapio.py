@@ -27,7 +27,7 @@ def criar_prato():
         df_final = df_atual
 
     df_final.to_json(arquivoCardapio, indent=4, orient="records")
-    print(f"\nPrato '{nome}' criado com sucesso!")
+    print(f"\n---> Prato '{nome}' criado com sucesso! <---")
 
 
 def listar_pratos():
@@ -44,7 +44,7 @@ def atualizar_prato():
 
         if prato_atualizar not in df["nome"].values:
             print("Este prato não existe no cardápio.")
-            atualizar_prato()
+            return atualizar_prato()
         else:
             print("\nO que deseja atualizar?\n1- Nome\n2- Descrição\n3- Categoria\n4- Valor")
             opcao = int(input("Escolha sua opção: "))
@@ -63,7 +63,7 @@ def atualizar_prato():
                 df.loc[df["nome"] == prato_atualizar, "valor"] = novo_valor
             else:
                 print("\nOpção inválida, tente novamente.")
-                atualizar_prato()
+                return atualizar_prato()
 
             df.to_json(arquivoCardapio, indent=4, orient="records")
             print(f"\nPrato '{prato_atualizar}' atualizado com sucesso!")
@@ -80,7 +80,7 @@ def deletar_prato():
 
         if prato_deletar not in df["nome"].values:
             print("Este prato não existe no cardápio.")
-            deletar_prato()
+            return deletar_prato()
         else:
             df = df[df["nome"] != prato_deletar]
 
@@ -106,4 +106,4 @@ def cardapio():
             break
         else:
             print("\nOpção inválida, selecione uma opção válida!\n")
-            cardapio()
+            continue
