@@ -101,7 +101,7 @@ def listar_pedidos():
 
         for i in range(len(df)):
 
-            print(f"\n//// Pedido número {df.loc[i, 'numeroPedido']} ////")
+            print(f"\n//// Pedido n° {df.loc[i, 'numeroPedido']} ////")
             pratos = df.loc[i, "pratos"]
             quantidades = df.loc[i, "quantidades"]
 
@@ -124,8 +124,6 @@ def atualizar_pedido():
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
 
         df = pd.read_json(arquivoPedido, orient="records")
-
-        print("\nLista de pedidos:\n")
         listar_pedidos()
 
         pedido_atualizar = int(input("\nInsira o número do pedido que deseja atualizar: "))
@@ -204,8 +202,22 @@ def atualizar_pedido():
             
         
 def deletar_pedido():
-    ...
 
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+
+        df = pd.read_json(arquivoPedido, orient="records")
+        listar_pedidos()
+
+        pedido_deletar = int(input("\nInsira o número do pedido que deseja deletar: "))
+
+        if pedido_deletar not in df["numeroPedido"].values:
+            print("Esse pedido não existe.")
+            return
+        else:
+            df = df[df["numeroPedido"] != pedido_deletar]
+
+        df.to_json(arquivoPedido, indent=4, orient="records")
+        print("\nPedido deletado com sucesso!\n")
 
 
 def pedidos():
