@@ -62,6 +62,8 @@ def ler_mapa_mesas():
     for cod, desc in estado_desc.items():
         count = len(df[df['estado'] == cod])
         print (f"{desc}: {count} mesa(s)")
+    
+    print("\n-------------------------------------------------")
 
 def atualizar_mesas():
     if not os.path.exists(arquivo_mesas) or os.path.getsize(arquivo_mesas) == 0:
@@ -172,7 +174,7 @@ def mesas():
         elif opcao == 3:
             atualizar_mesas()
         elif opcao == 4:
-            remover_mesas
+            remover_mesas()
         elif opcao == 5:
             break
         else:
