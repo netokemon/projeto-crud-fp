@@ -31,7 +31,7 @@ def criar_prato():
 
 
 def listar_pratos():
-    df = pd.read_json("cardapio.json")
+    df = pd.read_json(arquivoCardapio)
     print(df)
 
 
@@ -91,6 +91,7 @@ def deletar_prato():
         return
 
 def cardapio():
+    print("\033[31m")
     while True: 
         print("\n1- Criar novo prato\n2- Listar pratos\n3- Atualizar prato\n4- Deletar prato\n5- Voltar ao menu principal")
         opcao = int(input("Escolha sua opção: "))
@@ -107,3 +108,4 @@ def cardapio():
         else:
             print("\nOpção inválida, selecione uma opção válida!\n")
             continue
+    print("\033[0m")

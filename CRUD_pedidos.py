@@ -222,6 +222,7 @@ def deletar_pedido():
 
 
 def pedidos():
+    print("\033[1;35m")
     while True:
         print("\n1- Criar pedido\n2- Listar pedidos\n3- Atualizar pedido\n4- Deletar pedido\n5- Voltar ao menu principal")
         opcao = int(input("Escolha sua opção: "))
@@ -243,3 +244,4 @@ def pedidos():
         
         else:
             print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+    print("\033[0m")

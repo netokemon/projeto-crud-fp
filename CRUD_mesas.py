@@ -90,9 +90,7 @@ def atualizar_mesas():
     print ("1- Número")
     print ("2- Estado")
 
-     #A função try do python faz o seguinte: TENTA rodar o código aninhado, porém caso haja algum erro do python, não irá crashar o código, ao invés disso irá
-        #rodar o except ValueError que avisa que o número é inválido.
-
+    
     try:
         opcao = int(input("Escolha sua opção: "))
     except ValueError:
@@ -100,8 +98,7 @@ def atualizar_mesas():
         return
 
     if opcao == 1:
-        #A função try do python faz o seguinte: TENTA rodar o código aninhado, porém caso haja algum erro do python, não irá crashar o código, ao invés disso irá
-        #rodar o except ValueError que avisa que o número é inválido.
+
         try:
             novo_numero = int(input("Digite o novo número da mesa: "))
 
@@ -163,6 +160,7 @@ def remover_mesas():
         print("\nMesa deletada com sucesso! :)\n")
 
 def mesas():
+    print("\033[33m")
     while True:
         print("\nGerenciamento das mesas")
         print("\n1- Adicionar nova mesa\n2- Ler mapa de mesas\n3- Atualizar status da mesa\n4- Remover mesa\n5- Voltar ao menu principal")
@@ -180,3 +178,4 @@ def mesas():
         else:
             print ("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
             continue
+    print("\033[m")
