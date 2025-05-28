@@ -2,14 +2,22 @@ import pandas as pd
 import os
 from CRUD_cardapio import listar_pratos
 
+
 arquivoPedido = "pedidos.json"
 arquivoCardapio = "cardapio.json"
+
 
 def criar_pedido():
 
     print("\n--- Criar novo pedido ---")
-    print("\n--- Cardápio do Restaurante ---")
-   # listar_pratos()
+
+    if os.path.exists(arquivoCardapio) and os.path.getsize(arquivoCardapio) > 0: 
+        print("\n--- Cardápio do Restaurante ---\n") 
+        listar_pratos()
+    else: 
+        print("\n/////////////// ERRO: A ação não pode ser feita, nenhum prato está cadastrado no cardápio. ///////////////")
+        return
+    
 
     lNomes = []
     lQuantidade = []
@@ -18,19 +26,27 @@ def criar_pedido():
     while(True):
 
         if (len(lNomes)== 0): 
-            nome = input("Insira o nome do prato: ")
+            nome = input("\nInsira o nome do prato: ")
             
         else: 
-            opcao = input("Deseja inserir outro prato? ('Sim' / 'Não'): ")
+            opcao = input("\nDeseja inserir outro prato? ('Sim' / 'Não'): ")
             
-            if opcao == "Sim" or opcao == "sim" or opcao == "SIM":
+            if opcao.lower() == "sim":
                 nome = input("Insira o nome do prato: ")
             else:
                 break
 
 
-        quantidade = int(input("Insira a quantidade: "))
+        df_cardapio = pd.read_json(arquivoCardapio)
+        pratos_existentes = set(df_cardapio['nome'].tolist())
 
+        while(nome not in pratos_existentes):
+            print("\n/////////////// ERRO: O prato não existe no cardápio. ///////////////")
+            nome = input("Insira o nome do prato: ")
+
+        quantidade = int(input("Insira a quantidade: "))
+        
+    
         if nome in lNomes:
             indexNome = lNomes.index(nome)
             lQuantidade[indexNome] += quantidade
@@ -39,61 +55,174 @@ def criar_pedido():
             lQuantidade.append(quantidade)
 
 
+    opcao = input("\nDeseja inserir uma observação adicional? ('Sim' / 'Não'): ")
+    if opcao.lower() == "sim":
+        observacaoAdicional = input("Insira a observação adicional: ")
+    else: 
+        observacaoAdicional = "Sem observação adicional"
+    
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+        df = pd.read_json(arquivoPedido)
+        numeroPedido = int(df['numeroPedido'].max()) + 1
+    else:
+        numeroPedido = 1
+        
     pedido = {
         "pratos" : lNomes,
-        "quantidades" : lQuantidade
+        "quantidades" : lQuantidade,
+        "numeroPedido": numeroPedido,
+        "observaçãoAdicional": observacaoAdicional,
+        "status": "Em preparo"
     }
 
     df = pd.DataFrame([pedido])
-
-    # checando se o arquivo existe
+ 
     if os.path.exists(arquivoPedido):
 
-        # checando se tem algo dentro do arquivo
         if os.path.getsize(arquivoPedido) > 0:
 
-            # se tiver, ele pega o(s) pedido(s) existente(s) e concatena com o novo pedido
             df_antigo = pd.read_json(arquivoPedido)
             df_final = pd.concat([df_antigo, df])
-
-        # se não tiver nada dentro do arquivo, ele coloca o novo pedido como primeiro item
         else:
             df_final = df
-
-        # converte o pedido atualizado para json    
+ 
         df_final.to_json(arquivoPedido, indent=4, orient='records')
-
-    # se o arquivo não existir, ele cria um e coloca o novo pedido dentro   
+   
     else:
         df.to_json(arquivoPedido, indent=4, orient='records')
 
+print("\n---> Pedido Criado com sucesso! <---\n")
 
 def listar_pedidos():
 
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+
         df = pd.read_json(arquivoPedido)
         print("\n/////// Lista de Pedidos - Restauranty: ////////\n")
+
         for i in range(len(df)):
-            print(f"\n //// Pedido número {i+1} ////\n")
+
+            print(f"\n//// Pedido n° {df.loc[i, 'numeroPedido']} ////")
             pratos = df.loc[i, "pratos"]
             quantidades = df.loc[i, "quantidades"]
+
             for j in range(len(pratos)):
                 print(f"\nPrato {j+1}: {pratos[j]} - {quantidades[j]} unidade(s)")
         
+            observacao = df.loc[i, "observaçãoAdicional"]
+            print(f"\nObservação adicional: {observacao}")
+
+            status = df.loc[i, "status"]
+            print(f"\nStatus: {status}")
+            
         
     else:
         print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
 
 
 def atualizar_pedido():
-    ...
+    
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
 
+        df = pd.read_json(arquivoPedido, orient="records")
+        listar_pedidos()
+
+        pedido_atualizar = int(input("\nInsira o número do pedido que deseja atualizar: "))
+
+        if pedido_atualizar not in df["numeroPedido"].values:
+            print("\n/////////////// ERRO: Esse pedido não existe. ///////////////\n")
+            return
+
+        else:
+            print("\nO que deseja atualizar?\n1- Pratos\n2- Observação adicional\n3- Status")
+            opcao = int(input("Escolha sua opção: "))
+
+            if opcao == 1:
+                print("\nO que deseja fazer?\n1- Adicionar prato\n2- Remover prato\n3- Alterar quantidade de um prato")
+                opcao = int(input("Escolha sua opção: "))
+
+                if opcao == 1:
+                    ...
+                elif opcao == 2:
+                    ...
+                elif opcao == 3:
+                    ...
+                else: 
+                    print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+                    return
+
+
+            elif opcao == 2:
+                print("\nO que deseja fazer?\n1- Adicionar descrição\n2- Remover descrição\n3- Alterar descrição")
+                opcao = int(input("Escolha sua opção: "))
+
+                if opcao == 1:
+                    ...
+                elif opcao == 2:
+                    ...
+                elif opcao == 3:
+                    ...
+                else:
+                    print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+                    return
+
+            elif opcao == 3:
+
+                print("\nOpções de status:\n1- Em preparo\n2- Pronto\n3- Entregue")
+                opcao = int(input("Escolha sua opção: "))
+
+
+                if opcao == 1:
+                    novo_status = "Em preparo"
+                
+                elif opcao == 2:
+                    novo_status = "Pronto"
+                
+                elif opcao == 3:
+                    novo_status = "Entregue"
+                
+                else:
+                    print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+                    return
+                   
+                df.loc[df["numeroPedido"] == pedido_atualizar, "status"] = novo_status
+
+        
+            else: 
+                print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+                return
+
+            df.to_json(arquivoPedido, indent=4, orient="records")
+            print("\nPedido atualizado com sucesso!\n")
+
+    else:
+        print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
+        return
+        
+            
+            
+        
 def deletar_pedido():
-    ...
 
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+
+        df = pd.read_json(arquivoPedido, orient="records")
+        listar_pedidos()
+
+        pedido_deletar = int(input("\nInsira o número do pedido que deseja deletar: "))
+
+        if pedido_deletar not in df["numeroPedido"].values:
+            print("/////////////// ERRO: Esse pedido não existe. ///////////////")
+            return
+        else:
+            df = df[df["numeroPedido"] != pedido_deletar]
+
+        df.to_json(arquivoPedido, indent=4, orient="records")
+        print("\nPedido deletado com sucesso! :)\n")
 
 
 def pedidos():
+    print("\033[1;35m")
     while True:
         print("\n1- Criar pedido\n2- Listar pedidos\n3- Atualizar pedido\n4- Deletar pedido\n5- Voltar ao menu principal")
         opcao = int(input("Escolha sua opção: "))
@@ -114,4 +243,5 @@ def pedidos():
             break
         
         else:
-            print("\nOpção inválida, selecione uma opção válida!\n")
+            print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
+    print("\033[0m")
