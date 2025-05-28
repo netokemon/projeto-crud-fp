@@ -31,8 +31,14 @@ def criar_prato():
 
 
 def listar_pratos():
-    df = pd.read_json("cardapio.json")
-    print(df)
+    if os.path.exists(arquivoCardapio):
+        if os.path.getsize(arquivoCardapio) > 0:
+            df = pd.read_json("cardapio.json")
+            print(df)
+        
+    else:
+     print ("Cardápio não existe!!")
+   
 
 
 def atualizar_prato():
