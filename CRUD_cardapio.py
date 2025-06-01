@@ -113,7 +113,7 @@ def buscar_prato():
 def cardapio():
     print("\033[31m")
     while True: 
-        print("\n1- Criar novo prato\n2- Listar pratos\n3- Atualizar prato\n4- Deletar prato\n5- Voltar ao menu principal")
+        print("\n1- Criar novo prato\n2- Listar pratos\n3- Atualizar prato\n4- Deletar prato\n5- Buscar prato\n6- Voltar ao menu principal")
         opcao = int(input("Escolha sua opção: "))
         if opcao == 1:
             criar_prato()
