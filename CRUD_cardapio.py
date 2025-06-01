@@ -96,7 +96,7 @@ def deletar_prato():
         print("\nNenhum prato cadastrado no cardápio.")
         return
     
-    def buscar_prato():
+def buscar_prato():
      if os.path.exists(arquivoCardapio):
         if os.path.getsize(arquivoCardapio) > 0:
           df = pd.read_json(arquivoCardapio, orient="records")
