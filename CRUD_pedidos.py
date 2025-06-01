@@ -95,14 +95,47 @@ print("\n---> Pedido Criado com sucesso! <---\n")
 
 def listar_pedidos():
 
-    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+    def listar_pedido_especifico():
+
+        numeroPedido = int(input("\nInsira o número do pedido: "))
 
         df = pd.read_json(arquivoPedido)
+
+        if numeroPedido not in df["numeroPedido"].values:
+
+            print("\n/////////////// ERRO: Esse pedido não existe. ///////////////\n")
+            return
+        
+        else:
+
+            index = df[df["numeroPedido"] == numeroPedido].index[0]
+
+            print(f"\n//// Pedido n° {df.loc[index, 'numeroPedido']} ////")
+
+            pratos = df.loc[index, "pratos"]
+            quantidades = df.loc[index, "quantidades"]
+
+            for j in range(len(pratos)):
+
+                print(f"\nPrato {j+1}: {pratos[j]} - {quantidades[j]} unidade(s)")
+            
+            observacao = df.loc[index, "observaçãoAdicional"]
+            print(f"\nObservação adicional: {observacao}")
+
+            status = df.loc[index, "status"]
+            print(f"\nStatus: {status}")
+
+
+    def listar_todos_pedidos():
+
+        df = pd.read_json(arquivoPedido)
+
         print("\n/////// Lista de Pedidos - Restauranty: ////////\n")
 
         for i in range(len(df)):
 
             print(f"\n//// Pedido n° {df.loc[i, 'numeroPedido']} ////")
+
             pratos = df.loc[i, "pratos"]
             quantidades = df.loc[i, "quantidades"]
 
@@ -114,10 +147,23 @@ def listar_pedidos():
 
             status = df.loc[i, "status"]
             print(f"\nStatus: {status}")
-            
-        
+
+
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
+
+        print("\nO que deseja listar?\n1- Pedido especifico\n2- Todos os pedidos")
+        opcao = int(input())
+
+        if opcao == 1:
+            listar_pedido_especifico()
+        elif opcao == 2:
+            listar_todos_pedidos()
+    
     else:
         print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
+
+
+    return listar_pedido_especifico, listar_todos_pedidos
 
 
 def atualizar_pedido():
@@ -125,7 +171,10 @@ def atualizar_pedido():
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
 
         df = pd.read_json(arquivoPedido, orient="records")
-        listar_pedidos()
+
+        listar_pedido_especifico, listar_todos_pedidos = listar_pedidos()
+
+        listar_todos_pedidos()
 
         pedido_atualizar = int(input("\nInsira o número do pedido que deseja atualizar: "))
 
@@ -135,6 +184,8 @@ def atualizar_pedido():
             return
 
         else:
+
+            listar_pedido_especifico()
 
             print("\nO que deseja atualizar?\n1- Pratos\n2- Observação adicional\n3- Status")
             opcao = int(input("Escolha sua opção: "))
