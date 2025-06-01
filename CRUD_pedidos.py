@@ -130,41 +130,101 @@ def atualizar_pedido():
         pedido_atualizar = int(input("\nInsira o número do pedido que deseja atualizar: "))
 
         if pedido_atualizar not in df["numeroPedido"].values:
+
             print("\n/////////////// ERRO: Esse pedido não existe. ///////////////\n")
             return
 
         else:
+
             print("\nO que deseja atualizar?\n1- Pratos\n2- Observação adicional\n3- Status")
             opcao = int(input("Escolha sua opção: "))
 
             if opcao == 1:
+
                 print("\nO que deseja fazer?\n1- Adicionar prato\n2- Remover prato\n3- Alterar quantidade de um prato")
                 opcao = int(input("Escolha sua opção: "))
 
                 if opcao == 1:
-                    ...
+
+                    if os.path.exists(arquivoCardapio) and os.path.getsize(arquivoCardapio) > 0: 
+
+                        print("\n--- Cardápio do Restaurante ---\n") 
+                        listar_pratos()
+
+                    else:
+
+                        print("\n/////////////// ERRO: A ação não pode ser feita, nenhum prato está cadastrado no cardápio. ///////////////")
+                        return
+                    
+                    nome = input("\nInsira o nome do prato: ")
+
+                    df_cardapio = pd.read_json(arquivoCardapio)
+                    pratos_existentes = set(df_cardapio['nome'].tolist())
+
+                    while(nome not in pratos_existentes):
+                        print("\n/////////////// ERRO: O prato não existe no cardápio. ///////////////")
+                        nome = input("Insira o nome do prato: ")
+
+                    quantidade = int(input("Insira a quantidade: "))
+                    
+                    if nome in df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0]:
+
+                        indexNome = df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0].index(nome)
+                        df.loc[df["numeroPedido"] == pedido_atualizar, "quantidades"].values[0][indexNome] += quantidade
+                    
+                    else:
+
+                        df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0].append(nome)
+                        df.loc[df["numeroPedido"] == pedido_atualizar, "quantidades"].values[0].append(quantidade)
+
                 elif opcao == 2:
-                    ...
+
+                    nome = input("\nInsira o nome do prato que deseja remover: ")
+
+                    if nome not in df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0]:
+
+                        print("\n/////////////// ERRO: Esse prato não está no pedido. ///////////////\n")
+                        return
+                    else:
+
+                        indexNome = df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0].index(nome)
+                        df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0].pop(indexNome)
+                        df.loc[df["numeroPedido"] == pedido_atualizar, "quantidades"].values[0].pop(indexNome)
+
                 elif opcao == 3:
-                    ...
+
+                    nome = input("\nInsira o nome do prato que deseja alterar a quantidade: ")
+
+                    if nome not in df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0]:
+
+                        print("\n/////////////// ERRO: Esse prato não está no pedido. ///////////////\n")
+                        return
+                    
+                    else:
+
+                        nova_quantidade = int(input("Insira a nova quantidade: "))
+                        indexNome = df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0].index(nome)
+                        df.loc[df["numeroPedido"] == pedido_atualizar, "quantidades"].values[0][indexNome] = nova_quantidade
                 else: 
                     print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
                     return
 
 
             elif opcao == 2:
-                print("\nO que deseja fazer?\n1- Adicionar descrição\n2- Remover descrição\n3- Alterar descrição")
+                print("\nO que deseja fazer?\n1- Adicionar observação\n2- Remover observação\n3- Alterar observação")
                 opcao = int(input("Escolha sua opção: "))
 
                 if opcao == 1:
-                    ...
+                    nova_observação = input("Insira a observação: ")
                 elif opcao == 2:
-                    ...
+                    nova_observação = "Sem observação adicional"
                 elif opcao == 3:
-                    ...
+                    nova_observação = input("Insira a nova observação: ")
                 else:
                     print("\n/////////////// ERRO: Opção inválida, selecione uma opção válida! ///////////////\n")
                     return
+                
+                df.loc[df["numeroPedido"] == pedido_atualizar, "observaçãoAdicional"] = nova_observação
 
             elif opcao == 3:
 
@@ -199,9 +259,7 @@ def atualizar_pedido():
         print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
         return
         
-            
-            
-        
+                      
 def deletar_pedido():
 
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
