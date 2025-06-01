@@ -5,13 +5,15 @@ arquivoCardapio = "cardapio.json"
 
 def criar_prato():
     print("\nCriar novo prato")
-    nome = input("Nome do prato: ")
+    nome = input("Nome do prato: ").capitalize()
     descricao = input("Descrição do prato: ")
+    ingredientes = input("Ingredientes do prato: ")
     categoria = input("Categoria do prato: ")
     valor = float(input("Valor do prato: "))
     prato = {
         "nome": [nome],
         "descricao": [descricao],
+        "ingredientes": [ingredientes],
         "categoria": [categoria],
         "valor": [valor]
     }
@@ -52,7 +54,7 @@ def atualizar_prato():
             print("Este prato não existe no cardápio.")
             return atualizar_prato()
         else:
-            print("\nO que deseja atualizar?\n1- Nome\n2- Descrição\n3- Categoria\n4- Valor")
+            print("\nO que deseja atualizar?\n1- Nome\n2- Descrição\n3- Categoria\n4- Ingredientes\n5 - Valor")
             opcao = int(input("Escolha sua opção: "))
 
             if opcao == 1:
@@ -65,6 +67,9 @@ def atualizar_prato():
                 nova_categoria = input("Nova categoria do prato: ")
                 df.loc[df["nome"] == prato_atualizar, "categoria"] = nova_categoria
             elif opcao == 4:
+                novos_ingredientes = float(input("Novos ingredientes do prato: "))
+                df.loc[df["nome"] == prato_atualizar, "ingredientes"] = novos_ingredientes
+            elif opcao == 5:
                 novo_valor = float(input("Novo valor do prato: "))
                 df.loc[df["nome"] == prato_atualizar, "valor"] = novo_valor
             else:
@@ -100,7 +105,7 @@ def buscar_prato():
      if os.path.exists(arquivoCardapio):
         if os.path.getsize(arquivoCardapio) > 0:
           df = pd.read_json(arquivoCardapio, orient="records")
-          nome_prato = input("Digite o nome do prato que deseja buscar: ")
+          nome_prato = input("Digite o nome do prato que deseja buscar: ").capitalize()
 
         if nome_prato in df["nome"].values:
             prato = df[df["nome"] == nome_prato]
