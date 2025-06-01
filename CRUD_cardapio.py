@@ -95,6 +95,20 @@ def deletar_prato():
     else:
         print("\nNenhum prato cadastrado no cardápio.")
         return
+    
+    def buscar_prato():
+     if os.path.exists(arquivoCardapio):
+        if os.path.getsize(arquivoCardapio) > 0:
+          df = pd.read_json(arquivoCardapio, orient="records")
+          nome_prato = input("Digite o nome do prato que deseja buscar: ")
+
+        if nome_prato in df["nome"].values:
+            prato = df[df["nome"] == nome_prato]
+            print("\nPrato encontrado:")
+            print(prato)
+
+        else:
+            print("\nPrato não encontrado no cardápio.")
 
 def cardapio():
     print("\033[31m")
@@ -110,8 +124,11 @@ def cardapio():
         elif opcao == 4:
             deletar_prato()
         elif opcao == 5:
+            buscar_prato()
+        elif opcao == 6:
             break
         else:
             print("\nOpção inválida, selecione uma opção válida!\n")
             continue
     print("\033[0m")
+
