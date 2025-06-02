@@ -93,14 +93,18 @@ def criar_pedido():
 
 print("\n---> Pedido Criado com sucesso! <---\n")
 
-def listar_pedidos():
 
-    def listar_pedido_especifico():
 
-        numeroPedido = int(input("\nInsira o número do pedido: "))
+def listar_pedido_especifico(numeroPedido=None):
+        
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:    
 
         df = pd.read_json(arquivoPedido)
 
+        if numeroPedido is None:
+            numeroPedido = int(input("\nInsira o número do pedido: "))
+
+        
         if numeroPedido not in df["numeroPedido"].values:
 
             print("\n/////////////// ERRO: Esse pedido não existe. ///////////////\n")
@@ -125,10 +129,15 @@ def listar_pedidos():
             status = df.loc[index, "status"]
             print(f"\nStatus: {status}")
 
+    else:
+        print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
 
-    def listar_todos_pedidos():
 
-        df = pd.read_json(arquivoPedido)
+def listar_todos_pedidos():
+
+    df = pd.read_json(arquivoPedido)
+
+    if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
 
         print("\n/////// Lista de Pedidos - Restauranty: ////////\n")
 
@@ -148,6 +157,11 @@ def listar_pedidos():
             status = df.loc[i, "status"]
             print(f"\nStatus: {status}")
 
+    else:
+        print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
+
+
+def listar_pedidos():
 
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
 
@@ -162,17 +176,12 @@ def listar_pedidos():
     else:
         print("\n \n/////////////// ERRO: Sem pedidos até o momento! ////////////////////\n \n")
 
-
-    return listar_pedido_especifico, listar_todos_pedidos
-
-
+ 
 def atualizar_pedido():
     
     if os.path.exists(arquivoPedido) and os.path.getsize(arquivoPedido) > 0:
 
         df = pd.read_json(arquivoPedido, orient="records")
-
-        listar_pedido_especifico, listar_todos_pedidos = listar_pedidos()
 
         listar_todos_pedidos()
 
@@ -185,7 +194,7 @@ def atualizar_pedido():
 
         else:
 
-            listar_pedido_especifico()
+            listar_pedido_especifico(pedido_atualizar)
 
             print("\nO que deseja atualizar?\n1- Pratos\n2- Observação adicional\n3- Status")
             opcao = int(input("Escolha sua opção: "))
