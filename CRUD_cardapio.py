@@ -33,10 +33,10 @@ def criar_prato():
 
 
 def listar_pratos():
-    if os.path.exists(arquivoCardapio):
-        if os.path.getsize(arquivoCardapio) > 0:
-            df = pd.read_json("cardapio.json")
-            print(df)
+    if os.path.exists(arquivoCardapio) and os.path.getsize(arquivoCardapio) > 0:
+        
+        df = pd.read_json("cardapio.json")
+        print(df)
         
     else:
      print ("Cardápio não existe!!")
@@ -67,7 +67,7 @@ def atualizar_prato():
                 nova_categoria = input("Nova categoria do prato: ")
                 df.loc[df["nome"] == prato_atualizar, "categoria"] = nova_categoria
             elif opcao == 4:
-                novos_ingredientes = float(input("Novos ingredientes do prato: "))
+                novos_ingredientes = (input("Novos ingredientes do prato: "))
                 df.loc[df["nome"] == prato_atualizar, "ingredientes"] = novos_ingredientes
             elif opcao == 5:
                 novo_valor = float(input("Novo valor do prato: "))
