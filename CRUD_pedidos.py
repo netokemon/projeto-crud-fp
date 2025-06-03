@@ -26,13 +26,13 @@ def criar_pedido():
     while(True):
 
         if (len(lNomes)== 0): 
-            nome = input("\nInsira o nome do prato: ")
+            nome = input("\nInsira o nome do prato: ").capitalize()
             
         else: 
             opcao = input("\nDeseja inserir outro prato? ('Sim' / 'Não'): ")
             
             if opcao.lower() == "sim":
-                nome = input("Insira o nome do prato: ")
+                nome = input("Insira o nome do prato: ").capitalize()
             else:
                 break
 
@@ -42,7 +42,7 @@ def criar_pedido():
 
         while(nome not in pratos_existentes):
             print("\n/////////////// ERRO: O prato não existe no cardápio. ///////////////")
-            nome = input("Insira o nome do prato: ")
+            nome = input("Insira o nome do prato: ").capitalize()
 
         quantidade = int(input("Insira a quantidade: "))
         
@@ -216,14 +216,14 @@ def atualizar_pedido():
                         print("\n/////////////// ERRO: A ação não pode ser feita, nenhum prato está cadastrado no cardápio. ///////////////")
                         return
                     
-                    nome = input("\nInsira o nome do prato: ")
+                    nome = input("\nInsira o nome do prato: ").capitalize()
 
                     df_cardapio = pd.read_json(arquivoCardapio)
                     pratos_existentes = set(df_cardapio['nome'].tolist())
 
                     while(nome not in pratos_existentes):
                         print("\n/////////////// ERRO: O prato não existe no cardápio. ///////////////")
-                        nome = input("Insira o nome do prato: ")
+                        nome = input("Insira o nome do prato: ").capitalize()
 
                     quantidade = int(input("Insira a quantidade: "))
                     
@@ -239,7 +239,7 @@ def atualizar_pedido():
 
                 elif opcao == 2:
 
-                    nome = input("\nInsira o nome do prato que deseja remover: ")
+                    nome = input("\nInsira o nome do prato que deseja remover: ").capitalize()
 
                     if nome not in df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0]:
 
@@ -253,7 +253,7 @@ def atualizar_pedido():
 
                 elif opcao == 3:
 
-                    nome = input("\nInsira o nome do prato que deseja alterar a quantidade: ")
+                    nome = input("\nInsira o nome do prato que deseja alterar a quantidade: ").capitalize()
 
                     if nome not in df.loc[df["numeroPedido"] == pedido_atualizar, "pratos"].values[0]:
 
