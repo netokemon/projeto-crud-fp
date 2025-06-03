@@ -255,9 +255,17 @@ def atualizar_pedido():
                         return
                     else:
 
-                        index = pratos_pedido.index(nome)
-                        pratos_pedido.pop(index)
-                        quantidades_pedido.pop(index)
+                        if len(pratos_pedido) == 1:
+
+                            df = df[df["numeroPedido"] != pedido_atualizar]
+                            df.to_json(arquivoPedido, indent=4, orient="records")
+                            print("\nPedido deletado por não ter mais pratos!\n")
+                            return
+
+                        else:
+                            index = pratos_pedido.index(nome)
+                            pratos_pedido.pop(index)
+                            quantidades_pedido.pop(index)
 
                 elif opcao == 3:
 
@@ -338,7 +346,7 @@ def deletar_pedido():
         pedido_deletar = int(input("\nInsira o número do pedido que deseja deletar: "))
 
         listar_pedido_especifico(pedido_deletar)
-        opcao= input("\nTem certeza que deseja deletar esse pedido? ('Sim' / 'Não')")
+        opcao= input("\nTem certeza que deseja deletar esse pedido? ('Sim' / 'Não'): ")
         
         if opcao.lower() != "sim":
             return
